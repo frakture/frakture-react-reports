@@ -19,14 +19,25 @@
     "test:coverage": "nwb test-react --coverage",
     "test:watch": "nwb test-react --server"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dayjs": "^1.8.23",
+    "query-string": "^6.11.1",
+    "react-grid-layout": "^0.18.3",
+    "recharts": "^1.8.5"
+  },
   "peerDependencies": {
     "react": "16.x"
   },
   "devDependencies": {
+    "@material-ui/core": "^4.9.7",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.46",
+    "@material-ui/pickers": "^3.2.10",
     "nwb": "0.24.x",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
+    "react-select": "^3.1.0"
   },
   "author": "",
   "homepage": "",

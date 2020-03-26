@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 
-export default class extends Component {
-  render() {
+import {ReportDisplay} from './ReportDisplay';
+
+function HelloWorld(){
     return <div>
-      <h2>Welcome to React components</h2>
+      <h2>HelloWorld</h2>
     </div>
-  }
 }
+
+export {HelloWorld,ReportDisplay};
