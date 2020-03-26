@@ -22,12 +22,7 @@ import {useHistory,useLocation} from 'react-router-dom';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-function ReportError(){
-	return null;
-}
 
-/*
-//This struggles in certain compiling environments
 class ReportError extends React.Component {
 
 	constructor(props) {
@@ -52,7 +47,7 @@ class ReportError extends React.Component {
 		return this.props.children;
 	}
 }
-*/
+
 
 
 
@@ -146,13 +141,20 @@ function ComponentWrapper(_props){
 	const [filterValues,setFilterValue]=useUrlParamFilters();
 	component.filterValues=filterValues;
 	component.setFilterValue=setFilterValue;
+	if (!component.name) return "Could not find a name in the component";
 
 	let element=null;
 	let err=(<span>{component.label?<h4>{component.label}</h4>:""}Could not render</span>);
+
 	if (editing){ //go ahead and use the element until we know we don't have to
 		element=(<span>{component.label?<h4>{component.label}</h4>:""}{component.component}</span>);
 	}else{
-		element=React.createElement(c,component);
+		try{
+			element=React.createElement(c,component);
+		}catch(e){
+			console.error(e);
+			return "Error with "+component.component;
+		}
 	}
 	//delete props.component;
 	return <div {...props}><ReportError contents={err}>{element}</ReportError>{children}</div>;
@@ -209,15 +211,14 @@ function assignContext({report:reportConfig}){
 		}
 	});
 
-	for (let key in report.components){
-		let c=report.components[key];
-		c.key=key;
+	for (let name in report.components){
+		let c=report.components[name];
+		c.name=name;
 		c.params=params;
 		let data_source=report.data_sources_array.find(ds=>ds.alias==c.data_source)
 								|| report.data_sources_array.find(ds=>ds.alias=="default");
 		if(c.data_source && c.data_source != data_source.alias) throw new Error('No data_source with alias: '+c.data_source);
 		if (data_source){
-			console.log("Using data source:",data_source);
 			c.table=data_source.table;
 			c.warehouse_bot_id=data_source.warehouse_bot_id;
 			c.conditions=(c.conditions || []).concat(data_source.conditions ||[]);
@@ -228,6 +229,7 @@ function assignContext({report:reportConfig}){
 }
 
 export function ReportDisplay(props){
+
 	let {report:_report,
 		editing=false,
 		editing_tools,
@@ -236,16 +238,19 @@ export function ReportDisplay(props){
 	if (!executeDataQuery) return "You must provide an executeDataQuery function";
 
 	let report=assignContext({report:_report});
+
 	//Try just the lg
 	let layouts={lg:(report.layouts||{}).lg};
 
-	let arr=Object.keys(report.components||{}).map(key=>{
-		let config=report.components[key];
+	let arr=Object.keys(report.components||{}).map(name=>{
+		let config=report.components[name];
+
 		if (!config.component){
 			console.error("Could not find a component for key "+key+" with keys:",Object.keys(config));
 			return null;
 		}
-		return Object.assign(config,{key});
+		config.name=name;
+		return config;
 	}).filter(Boolean);
 	if (arr.length==0){
 		console.log(report);
@@ -265,13 +270,9 @@ export function ReportDisplay(props){
 				cols={{xl:12,lg: 12, md: 12, sm: 12, xs: 1,xxs:1}}
 				rowHeight={50}
 				onLayoutChange={onLayoutChange}
-			>{arr.map((a)=>{
+			>{arr.map((a,i)=>{
 					a.get_color=get_color;
-					try{
-						return (<ComponentWrapper component={a} editing={editing?true:undefined} key={a.key}/>);
-					}catch(e){
-						console.error("Error creating element:",e);
-					}
+					return <ComponentWrapper key={i} component={a} editing={editing?true:undefined}/>;
 				}).filter(Boolean)}
 			</ResponsiveGridLayout>
 		</Paper>

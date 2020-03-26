@@ -12,7 +12,13 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
 import {relativeDate} from "../formatters.js";
+import {useLocation} from 'react-router-dom';
 
+
+function _QueryStringForm(props){
+	return <div>(Forms TBD)</div>;
+}
+/*
 class _QueryStringForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -43,15 +49,17 @@ class _QueryStringForm extends React.Component {
 	}
 
 	render() {
+		return "";
 
 		return (
 			<form onSubmit={this.handleSubmit}>
-				<button type="submit" style={{display:"none"}}/>{/* Required to submit it?  Weird*/}
+				<button type="submit" style={{display:"none"}}/>
 				{this.props.children({onChange:this.handleChange,values:this.state,submit:this.handleSubmit})}
 			</form>
 		);
 	}
 }
+*/
 
 
 class TextFieldInput extends React.Component {

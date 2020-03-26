@@ -9,7 +9,7 @@ export default function FraktureQueryTextFilter (props){
 	let location=useLocation();
 	let search=queryString.parse(location.search);
 	let history=useHistory();
-	let {key,warehouse_bot_id:bot_id,table,field,conditions}=props;
+	let {name,warehouse_bot_id:bot_id,table,field,conditions}=props;
 
 	//If there's a filter on this field, remove it, so we can get the full select dropdown, regarless of things
 	//that were picked
@@ -20,7 +20,7 @@ export default function FraktureQueryTextFilter (props){
 		return true;
 	});
 	let variables={
-		key,
+		name,
 		bot_id,
 		table,
 		fields:[{alias:"field",fql:field},{alias:"count",fql:"count(*)"}],

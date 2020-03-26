@@ -5,11 +5,11 @@ import Typography from '@material-ui/core/Typography';
 
 
 export default function FraktureScorecard(props){
-	let {key,warehouse_bot_id,table,metric,width,height,conditions,include_previous=false,previous_conditions,label,size="md"}=props;
+	let {name,warehouse_bot_id,table,metric,width,height,conditions,include_previous=false,previous_conditions,label,size="md"}=props;
 	include_previous=include_previous!==false;
 
 	const variables={
-		key,
+		name,
 		bot_id:warehouse_bot_id,
 		table,
 		fields:[{alias:"value",fql:metric.fql}],
@@ -17,7 +17,7 @@ export default function FraktureScorecard(props){
 		limit:2
 	};
 	const previousVariables={
-		key:key+"_prev",
+		name:name+"_prev",
 		bot_id:warehouse_bot_id,
 		table,
 		fields:[{alias:"value",fql:metric.fql}],

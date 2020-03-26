@@ -96,16 +96,18 @@ if (error) return <p>Oh no... {error.message}</p>;
 
 
 export function ReportQuery(props) {
-	const {children,variables:_variables,width,height}=props;
+	const {name,children,variables:_variables,width,height}=props;
+	if (!name) return "ReportQuery requires a unique name";
 	const executeDataQuery=React.useContext(DataQueryContext);
 	if(typeof children != 'function') throw new Error('children must be function');
 	const variables=JSON.parse(JSON.stringify(buildQueryVariables(_variables)));
 	if(!variables) throw new Error("No built variables for variables: " +JSON.stringify(variables));
 
-	const {data,error,loading}=executeDataQuery({variables});
+	console.log("Calling executeDataQuery");
+	const {data,error,loading}=executeDataQuery({name,variables});
 	if (error){
 		console.error(error);
-		return "Could not render";
+		return "There was an error loading data";
 	}
 	if(loading){
 		if (width && height){
@@ -115,6 +117,5 @@ export function ReportQuery(props) {
 		};
 		return <i className='zmdi zmdi-hc-3x zmdi-spinner zmdi-hc-spin' style={{position:"relative",margin:"auto"}}/>;
 	}
-	console.log(data);
 	return children({data});
 };

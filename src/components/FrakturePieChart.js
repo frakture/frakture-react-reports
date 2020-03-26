@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import {formatValue} from '../formatters';
 
 export default function FrakturePieChart(props){
-	let {key,warehouse_bot_id,table,dimension,metric,width,height,conditions,order_by,label="",get_color,limit=10}=props;
+	let {name,warehouse_bot_id,table,dimension,metric,width,height,conditions,order_by,label="",get_color,limit=10}=props;
 
 	let group_by=[dimension.fql];
 	let pieFields=[
@@ -19,7 +19,6 @@ export default function FrakturePieChart(props){
 
 
 	let variables={
-		key,
 		bot_id:warehouse_bot_id,
 		table,
 		fields:pieFields,
@@ -31,7 +30,7 @@ export default function FrakturePieChart(props){
 
 	return <React.Fragment>
 		{label && <Typography variant="h6">{label}</Typography>}
-		<ReportQuery key="detail" width={width} height={height} variables={variables}>{({data}) => {
+		<ReportQuery name={name} key="detail" width={width} height={height} variables={variables}>{({data}) => {
 			if (data.length==0) return "No data available";
 			if (data[0].name=="undefined"){
 				throw new Error("Invalid data, no name");

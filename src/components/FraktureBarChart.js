@@ -16,8 +16,9 @@ import Typography from '@material-ui/core/Typography';
 import {formatValue,relativeDate} from '../formatters';
 
 export default function FraktureBarChart(props){
-	let {key,warehouse_bot_id,table,dimension,metrics,breakdown:_breakdown,conditions,order_by,
+	let {name,warehouse_bot_id,table,dimension,metrics,breakdown:_breakdown,conditions,order_by,
 		is_date,label="",get_color,width,height,params}=props;
+	if (!name) return "Name is required in props";
 	let breakdown=[].concat(_breakdown).filter(Boolean);
 	if (breakdown.length>1) throw new Error("Only one breakdown field allowed");
 	breakdown=breakdown[0];
@@ -79,7 +80,6 @@ export default function FraktureBarChart(props){
 	order_by=order_by || xGroup;
 
 	let variables={
-		key,
 		bot_id:warehouse_bot_id,
 		table,
 		fields,
@@ -108,7 +108,7 @@ export default function FraktureBarChart(props){
 
 	return <React.Fragment>
 		{label && <Typography variant="h6">{label}</Typography>}
-		<ReportQuery key="detail" width={width} height={height} variables={variables}>{({data}) => {
+		<ReportQuery key="detail" name={name} width={width} height={height} variables={variables}>{({data}) => {
 			//const width = 500;
 			if (data.length==0) return "No data available";
 			data.forEach(d=>{

@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import {ReportQuery} from "./Common";
 
 export default function FraktureWarehouseTable(props){
-	let {key,warehouse_bot_id:bot_id,table,label,width,height,conditions}=props;
+	let {name,warehouse_bot_id:bot_id,table,label,width,height,conditions}=props;
 
 	const [sort, setSort] = useState(null);
 	const [sortDirection, setSortDirection] = useState('asc');
@@ -19,7 +19,7 @@ export default function FraktureWarehouseTable(props){
 	}
 
 	let variables={
-		key,
+		name,
 		bot_id,
 		table,
 		conditions,
