@@ -18,8 +18,10 @@ $ npm install frakture-react-reports
 
 ## Sample usage
 Frakture React Reports requires:
- 	1) A wrapping router for dynamic URL navigation
-	2) An executeDataQuery React hook of the following structure
+
+1) A wrapping router for dynamic URL navigation
+
+2) An executeDataQuery React hook of the following structure
 
 ```
 function executeDataQuery({name,variables}){
@@ -27,9 +29,9 @@ function executeDataQuery({name,variables}){
 }
 ```
 
-	3) A 'report' parameter that has includes the report configuration, including at least 'components' and 'layouts'
+3) A 'report' parameter that has includes the report configuration, including at least 'components' and 'layouts'
 
-	For example:
+For example:
 
 
 ```
