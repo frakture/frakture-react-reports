@@ -7,7 +7,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import {HelloWorld,ReportDisplay} from '../../src'
+import {HelloWorld,ReportDisplay,DemoGrid} from '../../src'
 
 function executeDataQuery(props){
 	let {name='n/a',variables}=props;
@@ -20,11 +20,9 @@ function executeDataQuery(props){
 
 export default class Demo extends Component {
   render() {
-    return <div>
+    return <div style={{with:"999"}}>
 			<Router>
-	      <h1>frakture-react-reports Demo</h1>
-				<HelloWorld/>
-				<ReportDisplay {...{executeDataQuery,report}}/>
+					<ReportDisplay {...{executeDataQuery,report}}/>
 			</Router>
     </div>
   }

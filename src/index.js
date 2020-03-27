@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-import {ReportDisplay} from './ReportDisplay';
+import {ReportDisplay,DemoGrid} from './ReportDisplay';
 
 function HelloWorld(){
     return <div>
@@ -8,4 +8,4 @@ function HelloWorld(){
     </div>
 }
 
-export {HelloWorld,ReportDisplay};
+export {HelloWorld,ReportDisplay,DemoGrid};

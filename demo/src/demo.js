@@ -1,10 +1,30 @@
 const report={
   _id: '5e443372855b3d4f38832e8c',
-  label: 'Source Code Channel Breakdown',
+	logo:"https://frakturecdn.s3.amazonaws.com/accounts/frakture/frakture-icon-lg.png",
+  label: 'Frakture React Charts Sample',
   slug: 'source_code_channel',
   version: '2.6',
   layouts: {
   lg: [
+		{
+      w: 8,
+      h: 5,
+      x: 0,
+      y: 0,
+      i: 'revenue_chart',
+      moved: false,
+      static: false
+    },
+    {
+      w: 4,
+      h: 5,
+      x: 8,
+      y: 0,
+      i: 'revenue_pie',
+      moved: false,
+      static: false
+    },
+		/*
     { w: 2, h: 2, x: 0, y: 0, i: 'el0', moved: false, static: false },
     {
       w: 2,
@@ -89,24 +109,7 @@ const report={
       moved: false,
       static: false
     },
-    {
-      w: 8,
-      h: 5,
-      x: 0,
-      y: 2,
-      i: 'revenue_chart',
-      moved: false,
-      static: false
-    },
-    {
-      w: 4,
-      h: 5,
-      x: 8,
-      y: 2,
-      i: 'revenue_pie',
-      moved: false,
-      static: false
-    },
+
     {
       w: 8,
       h: 5,
@@ -135,6 +138,7 @@ const report={
       static: false
     },
     { w: 12, h: 9, x: 0, y: 28, i: 'el5', moved: false, static: false }
+		*/
   ]
 },
   include_date: true,

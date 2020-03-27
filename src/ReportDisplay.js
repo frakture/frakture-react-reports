@@ -3,8 +3,11 @@ import React from 'react';
 import queryString from 'query-string';
 import {relativeDate} from "./formatters.js";
 import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+import './styles.css';
+
 import {Responsive,WidthProvider} from 'react-grid-layout';
-import Paper from '@material-ui/core/Paper';
+import GridLayout from 'react-grid-layout';
 import {getColorFunc} from './components/colors.js';
 import {QuickDateRange,QueryStringForm} from './components/QueryStringInputs';
 import Typography from '@material-ui/core/Typography';
@@ -66,32 +69,21 @@ function ReportHeader(props){
 	let include_date=report.include_date || true;
 
 	if (report.include_date===false) include_date=false;
-	let {label,logo="https://frakturecdn.s3.amazonaws.com/accounts/frakture/frakture-icon-lg.png",agency_logo,data_sources_array}=report;
+	let {label,logo,agency_logo,data_sources_array}=report;
 	let filters=[];
 	data_sources_array.forEach(ds=>{
 		filters=filters.concat((ds.filters || []).map(f=>Object.assign({},ds,{field:f})));
 	});
 
-	return <div className="d-sm-flex justify-content-sm-between align-items-sm-center">
-		<img className="d-none d-md-block" src={logo} width="64" alt={report.account_id}/>
-		<Typography variant="h3" className="title">{label}</Typography>
+	return <div className="frakture-report-header">
+		{logo && <img src={logo} width="64" alt={label}/>}
+		{label && <Typography variant="h3" className="title">{label}</Typography>}
 		{filters && filters.length>0 && <div>
 			{filters.map((f,i)=><FraktureQueryTextFilter key={i} {...f}/>) }
 		</div>
 		}
 		<div>
-			{agency_logo && <img src={agency_logo} width="64"/>}
-			{include_date?
-				<QueryStringForm>
-					{ ({onChange,values}) => {
-
-						return (<div className="mb-0" style={{"justifyContent":"flex-end"}}>
-							<QuickDateRange
-								start={values.start || "-3M"}
-								end={values.end}
-								onChange={onChange}/>
-						</div>);}
-					}</QueryStringForm>
+			{include_date?<QuickDateRange/>
 				:""
 			}
 			<div className="d-none d-md-block">
@@ -127,6 +119,7 @@ as width/height to child elements
 function ComponentWrapper(_props){
 	let props=Object.assign({},_props);
 	const {component,editing,style,children}=props;
+	if (!component) return "Component prop must be specified";
 	delete props.component;
 
 	let c=componentMap[component.component];
@@ -228,6 +221,21 @@ function assignContext({report:reportConfig}){
 	return report;
 }
 
+export function DemoGrid(){
+    // layout is an array of objects, see the demo for more complete usage
+    const layout = [
+      {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
+      {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
+      {i: 'c', x: 4, y: 0, w: 1, h: 2}
+    ];
+    return (
+      <GridLayout className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
+        <div key="a">a</div>
+        <div key="b">b</div>
+        <div key="c">c</div>
+      </GridLayout>
+    )
+}
 export function ReportDisplay(props){
 
 	let {report:_report,
@@ -261,20 +269,21 @@ export function ReportDisplay(props){
 	//let currentLayoutName="lg";
 
 	return <DataQueryProvider executeDataQuery={executeDataQuery}>
-		<Paper className="report">
+		<div className="frakture-report">
 			<ReportHeader report={report} editing_tools={editing_tools}/>
 			<ResponsiveGridLayout
 				isDraggable={editing}
 				isResizable={editing}
 				layouts={layouts}
-				cols={{xl:12,lg: 12, md: 12, sm: 12, xs: 1,xxs:1}}
+				layout={layouts.lg}
+				cols={{xl:12,lg:12,md:12,sm:1,xs:1}}
 				rowHeight={50}
 				onLayoutChange={onLayoutChange}
 			>{arr.map((a,i)=>{
 					a.get_color=get_color;
-					return <ComponentWrapper key={i} component={a} editing={editing?true:undefined}/>;
+					return <ComponentWrapper key={a.name} component={a} editing={editing?true:undefined}/>;
 				}).filter(Boolean)}
 			</ResponsiveGridLayout>
-		</Paper>
+		</div>
 	</DataQueryProvider>;
 };
