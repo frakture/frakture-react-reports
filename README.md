@@ -43,9 +43,9 @@ function executeDataQuery({name,variables}){
 }
 
 function Demo(props){
-    return <Router>
-					<ReportDisplay {...{executeDataQuery,report}}/>
-			</Router>;
+  return <Router>
+		<ReportDisplay {...{executeDataQuery,report}}/>
+	</Router>;
 }
 ```
 
