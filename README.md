@@ -1,9 +1,5 @@
 # frakture-react-reports
 
-[![Travis][build-badge]][build]
-[![npm package][npm-badge]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
-
 ## Introduction
 
 Frakture React Reports is a React component to add Frakture charting to your application.  It is designed for use with a Frakture data endpoint.
@@ -12,7 +8,7 @@ Frakture React Reports is a React component to add Frakture charting to your app
 
 ### npm
 
-NPM is the easiest and fastest way to get started using Recharts. It is also the recommended installation method when building single-page applications (SPAs). It pairs nicely with a CommonJS module bundler such as Webpack.
+NPM is the easiest and fastest way to get started using Frakture Reports. It is also the recommended installation method when building single-page applications (SPAs). It pairs nicely with a CommonJS module bundler such as Webpack.
 
 
 ```sh

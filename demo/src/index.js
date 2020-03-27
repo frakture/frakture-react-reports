@@ -1,13 +1,8 @@
 import React, {Component} from 'react'
 import {render} from 'react-dom'
 import {report,data} from './demo';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-import {HelloWorld,ReportDisplay,DemoGrid} from '../../src'
+import {BrowserRouter as Router} from "react-router-dom";
+import {ReportDisplay} from '../../src'
 
 function executeDataQuery(props){
 	let {name='n/a',variables}=props;
@@ -18,14 +13,10 @@ function executeDataQuery(props){
 	return {data:data[name]}
 }
 
-export default class Demo extends Component {
-  render() {
-    return <div style={{with:"999"}}>
-			<Router>
+function Demo(props){
+    return <Router>
 					<ReportDisplay {...{executeDataQuery,report}}/>
-			</Router>
-    </div>
-  }
+			</Router>;
 }
 
 render(<Demo/>, document.querySelector('#demo'))
