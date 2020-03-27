@@ -48,7 +48,7 @@ function Demo(props){
 ```
 
 
-### dev build
+### development build
 
 ```sh
 $ git clone https://github.com/frakture/frakture-react-reports
@@ -57,7 +57,7 @@ $ npm install
 $ npm run build
 ```
 
-## Demo
+## Development Demo
 
 To examine the demos in your local build, execute:
 
