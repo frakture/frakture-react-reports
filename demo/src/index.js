@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {render} from 'react-dom'
 import {report,data} from './demo';
-import {BrowserRouter as Router} from "react-router-dom";
+import {BrowserRouter as Router,useHistory} from "react-router-dom";
 import {ReportDisplay} from '../../src'
 
 function executeDataQuery({name,variables}){
@@ -12,10 +12,13 @@ function executeDataQuery({name,variables}){
 	return {data:data[name],error:null,loading:null}
 }
 
+function History(props){
+	const history=useHistory();
+	return <ReportDisplay {...{executeDataQuery,report,history}}/>;
+}
+
 function Demo(props){
-    return <Router>
-					<ReportDisplay {...{executeDataQuery,report}}/>
-			</Router>;
+  return <Router><History/></Router>;
 }
 
 render(<Demo/>, document.querySelector('#demo'))

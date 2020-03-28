@@ -94,7 +94,6 @@ if (error) return <p>Oh no... {error.message}</p>;
 */
 
 
-
 export function ReportQuery(props) {
 	const {name,children,variables:_variables,width,height}=props;
 	if (!name) return "ReportQuery requires a unique name";
@@ -103,7 +102,6 @@ export function ReportQuery(props) {
 	const variables=JSON.parse(JSON.stringify(buildQueryVariables(_variables)));
 	if(!variables) throw new Error("No built variables for variables: " +JSON.stringify(variables));
 
-	console.log("Calling executeDataQuery");
 	const {data,error,loading}=executeDataQuery({name,variables});
 	if (error){
 		console.error(error);

@@ -12,6 +12,7 @@ import {getColorFunc} from './components/colors.js';
 import {QuickDateRange,QueryStringForm} from './components/QueryStringInputs';
 import Typography from '@material-ui/core/Typography';
 import {DataQueryProvider} from './components/DataQueryContext';
+import {HistoryProvider} from './components/HistoryContext';
 
 import FrakturePieChart from './components/FrakturePieChart';
 import FraktureScorecard from './components/FraktureScorecard';
@@ -20,8 +21,7 @@ import FraktureReportTable from './components/FraktureReportTable';
 import FraktureWarehouseTable from './components/FraktureWarehouseTable';
 import FraktureTextFilter from './components/FraktureTextFilter';
 import FraktureQueryTextFilter from './components/FraktureQueryTextFilter';
-
-import {useHistory,useLocation} from 'react-router-dom';
+import {HistoryContext} from './components/HistoryContext';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -94,19 +94,19 @@ function ReportHeader(props){
 }
 
 function useUrlParamFilters() {
-	const history=useHistory();
-	const location=useLocation();
+	const history=React.useContext(HistoryContext);
+	const location=history.location;
 
-	const rawParams=queryString.parse(location.search);
+	const rawQS=queryString.parse(location.search);
 	const filters = {};
-	Object.entries(rawParams)
+	Object.entries(rawQS)
 		.filter(([k]) => k.indexOf('f.')==0)
 		.forEach(([k,v]) => filters[k.split('f.')[1]]=v);
 	return [filters, (filter,value) => {
-		const realTimeParams = queryString.parse(location.search);
-		realTimeParams['f.'+filter]=value||'';
-		console.log('realTimeParams',realTimeParams);
-		location.search = queryString.stringify(realTimeParams);
+		const realTimeQS = queryString.parse(location.search);
+		realTimeQS['f.'+filter]=value||'';
+		console.log('realTimeQS',realTimeQS);
+		location.search = queryString.stringify(realTimeQS);
 		console.log(location);
 		setTimeout(()=>history.push(location),0);
 	}];
@@ -153,30 +153,24 @@ function ComponentWrapper(_props){
 	return <div {...props}><ReportError contents={err}>{element}</ReportError>{children}</div>;
 }
 
-function assignContext({report:reportConfig}){
+function assignContext({report:reportConfig,history}){
 	let report=JSON.parse(JSON.stringify(reportConfig));
-	let location=useLocation();
 
-	const params=queryString.parse(location.search);
-	params.start=relativeDate(params.start || "-3M").toISOString();
-	params.end=relativeDate(params.end|| "now").toISOString();
-	if (report.include_date===false){delete params.start; delete params.end;}
 
-	// if (document.location.href.indexOf("local.frakture.com")>=0){
-	// 	let local=require("./config/"+report.slug+".js");
-	// 	if (!local) return "Local config could not find "+report.slug+".js";
-	// 	report=extend(true,report,local);
-	// 	//return JSON.stringify(report);
-	// }
+	const qs=queryString.parse(location.search);
+	qs.start=relativeDate(qs.start || "-3M").toISOString();
+	qs.end=relativeDate(qs.end|| "now").toISOString();
+	if (report.include_date===false){delete qs.start; delete qs.end;}
+
 
 	//Pre-fill in data sources, etc
 	report.data_sources_array.forEach(data_source=>{
 		data_source.conditions=data_source.conditions||[];
 		if((data_source.filters && data_source.filters.length>0) || data_source.use_filter_params) {
-			for (let i in params){
+			for (let i in qs){
 				let s=i.split(".");
-				if (s[0]=='f' && s[1] && params[i]){
-					let arr=params[i].split(",").map(v=>v=="_blank"?"":v);
+				if (s[0]=='f' && s[1] && qs[i]){
+					let arr=qs[i].split(",").map(v=>v=="_blank"?"":v);
 					if (arr.length==1){
 						data_source.conditions.push({fql:s[1]+"="+`"${arr[0]}"`});
 					}else{
@@ -188,13 +182,13 @@ function assignContext({report:reportConfig}){
 
 		if (data_source.date_field){
 			data_source.previous_conditions=JSON.parse(JSON.stringify(data_source.conditions));
-			if (params.start){data_source.conditions.push({fql:data_source.date_field+">='"+params.start+"'"});}
-			if (params.end){
-				data_source.conditions.push({fql:data_source.date_field+"<'"+params.end+"'"});
+			if (qs.start){data_source.conditions.push({fql:data_source.date_field+">='"+qs.start+"'"});}
+			if (qs.end){
+				data_source.conditions.push({fql:data_source.date_field+"<'"+qs.end+"'"});
 			}
-			if (params.start && params.end){
-				let s=new Date(params.start).getTime();
-				let e=new Date(params.end).getTime();
+			if (qs.start && qs.end){
+				let s=new Date(qs.start).getTime();
+				let e=new Date(qs.end).getTime();
 				let previous_end=new Date(s).toISOString();
 				let previous_start=new Date(s-(e-s)).toISOString();
 				//This is for components that calculate data from the previous period
@@ -207,7 +201,7 @@ function assignContext({report:reportConfig}){
 	for (let name in report.components){
 		let c=report.components[name];
 		c.name=name;
-		c.params=params;
+		c.qs=qs;
 		let data_source=report.data_sources_array.find(ds=>ds.alias==c.data_source)
 								|| report.data_sources_array.find(ds=>ds.alias=="default");
 		if(c.data_source && c.data_source != data_source.alias) throw new Error('No data_source with alias: '+c.data_source);
@@ -236,14 +230,11 @@ export function DemoGrid(){
       </GridLayout>
     )
 }
-export function ReportDisplay(props){
-
+export function ReportDisplayContext(props){
 	let {report:_report,
 		editing=false,
 		editing_tools,
-		onLayoutChange,
-		executeDataQuery}=props;
-	if (!executeDataQuery) return "You must provide an executeDataQuery function";
+		onLayoutChange}=props;
 
 	let report=assignContext({report:_report});
 
@@ -268,22 +259,36 @@ export function ReportDisplay(props){
 	let get_color=getColorFunc("dcMetroColors");
 	//let currentLayoutName="lg";
 
-	return <DataQueryProvider executeDataQuery={executeDataQuery}>
-		<div className="frakture-report">
-			<ReportHeader report={report} editing_tools={editing_tools}/>
-			<ResponsiveGridLayout
-				isDraggable={editing}
-				isResizable={editing}
-				layouts={layouts}
-				layout={layouts.lg}
-				cols={{xl:12,lg:12,md:12,sm:1,xs:1}}
-				rowHeight={50}
-				onLayoutChange={onLayoutChange}
-			>{arr.map((a,i)=>{
-					a.get_color=get_color;
-					return <ComponentWrapper key={a.name} component={a} editing={editing?true:undefined}/>;
-				}).filter(Boolean)}
-			</ResponsiveGridLayout>
-		</div>
-	</DataQueryProvider>;
+	return <div className="frakture-report">
+				<ReportHeader report={report} editing_tools={editing_tools}/>
+				<ResponsiveGridLayout
+					isDraggable={editing}
+					isResizable={editing}
+					layouts={layouts}
+					layout={layouts.lg}
+					cols={{xl:12,lg:12,md:12,sm:1,xs:1}}
+					rowHeight={50}
+					onLayoutChange={onLayoutChange}
+				>{arr.map((a,i)=>{
+						a.get_color=get_color;
+						return <ComponentWrapper key={a.name} component={a} editing={editing?true:undefined}/>;
+					}).filter(Boolean)}
+				</ResponsiveGridLayout>
+			</div>
+};
+
+
+export function ReportDisplay(props){
+	let {report,
+		executeDataQuery,
+		history
+		}=props;
+	if (!history) return "You must provide a history object";
+	if (!executeDataQuery) return "You must provide an executeDataQuery function";
+
+	return <HistoryProvider history={history}>
+		<DataQueryProvider executeDataQuery={executeDataQuery}>
+			<ReportDisplayContext {...props}/>
+		</DataQueryProvider>
+	</HistoryProvider>;
 };

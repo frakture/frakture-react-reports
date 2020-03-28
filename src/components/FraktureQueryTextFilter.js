@@ -1,14 +1,15 @@
 import React from 'react';
 import {ReportQuery} from "./Common";
-import {useLocation,useHistory} from 'react-router-dom';
+import {HistoryContext} from './HistoryContext';
 import queryString from 'query-string';
 import Select from 'react-select';
 
 
 export default function FraktureQueryTextFilter (props){
-	let location=useLocation();
+	const history=React.useContext(HistoryContext);
+	const location=history.location;
+
 	let search=queryString.parse(location.search);
-	let history=useHistory();
 	let {name,warehouse_bot_id:bot_id,table,field,conditions}=props;
 
 	//If there's a filter on this field, remove it, so we can get the full select dropdown, regarless of things

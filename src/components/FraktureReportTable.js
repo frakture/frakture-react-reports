@@ -25,7 +25,6 @@ export default function FraktureReportTable(props){
 	}
 
 	let variables={
-		name,
 		bot_id,
 		table,
 		fields,
@@ -37,7 +36,7 @@ export default function FraktureReportTable(props){
 
 	return <React.Fragment>
 		{label && <Typography variant="h6">{label}</Typography>}
-		<ReportQuery variables={variables} width={width} height={height}>{({data}) => {
+		<ReportQuery name={name} variables={variables} width={width} height={height}>{({data}) => {
 			let columns = fields.map(x=>({
 				format:(!x.format)?null:typeof x.format=='function'?x.format:f=>formatValue(f,x.format),
 				field: x.alias,
@@ -47,7 +46,7 @@ export default function FraktureReportTable(props){
 			let rowsPerPage=Math.floor((height-80)/25);
 			if (rowsPerPage<3) rowsPerPage=3;
 			return <div style={{height:"100%",overflow:"auto",zoom:"0.8"}}>
-				<MaterialTable
+				<FraktureTable
 					key="table"
 					rows={data}
 					columns={columns}

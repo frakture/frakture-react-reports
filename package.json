@@ -11,7 +11,7 @@
     "umd"
   ],
   "scripts": {
-    "build": "nwb build-react-component",
+    "build": "nwb build-react-component --copy-files",
     "clean": "nwb clean-module && nwb clean-demo",
     "prepublishOnly": "npm run build",
     "start": "nwb serve-react-demo",
@@ -28,7 +28,8 @@
     "recharts": "^1.8.5"
   },
   "peerDependencies": {
-    "react": "16.x"
+    "react": "16.x",
+		"react-router-dom": "^5.1.2"
   },
   "devDependencies": {
     "@material-ui/core": "^4.9.7",
@@ -38,7 +39,7 @@
     "nwb": "0.24.x",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-router-dom": "^5.1.2",
+		"react-router-dom": "^5.1.2",
     "react-select": "^3.1.0"
   },
   "author": "",

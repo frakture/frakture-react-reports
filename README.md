@@ -69,5 +69,18 @@ $ npm run start
 
 and then browse to http://localhost:3000.
 
+
+## Local Development resolution
+
+When developing locally using npm link, your application may incorrectly view the react and/or react-dom libraries in frakture-react-reports as non peer dependencies, and throw a Invalid Hooks error.  Here is the text from Facebook on how to resolve that issue:
+
+https://reactjs.org/warnings/invalid-hook-call-warning.html
+
+
+"This problem can also come up when you use npm link or an equivalent. In that case, your bundler might “see” two Reacts — one in application folder and one in your library folder. Assuming myapp and mylib are sibling folders, one possible fix is to run npm link ../myapp/node_modules/react from mylib. This should make the library use the application’s React copy."
+
+
+
+
 [npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
 [npm]: https://www.npmjs.org/package/npm-package

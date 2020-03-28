@@ -12,7 +12,7 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
 import {relativeDate} from "../formatters.js";
-import {useLocation,useHistory} from 'react-router-dom';
+import {HistoryContext} from './HistoryContext';
 import { useForm,Controller } from "react-hook-form";
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateUtils from '@date-io/dayjs';
@@ -21,8 +21,9 @@ import DateUtils from '@date-io/dayjs';
 
 
 function QueryStringForm(props){
-	const location = useLocation();
-	const history = useHistory();
+	const history=React.useContext(HistoryContext);
+	const location=history.location;
+
 	let qs=queryString.parse(location.search || "");
 	const { control,handleSubmit, register, errors } = useForm({mode:"onBlur",defaultValues:qs});
 
@@ -101,8 +102,9 @@ function FraktureDatePicker(props){
 
 
 function QuickDateRange(props){
-	const location = useLocation();
-	const history = useHistory();
+	const history=React.useContext(HistoryContext);
+	const location=history.location;
+
 	let qs=queryString.parse(location.search || "");
 
 	function handleChange(event){

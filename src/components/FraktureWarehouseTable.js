@@ -19,7 +19,6 @@ export default function FraktureWarehouseTable(props){
 	}
 
 	let variables={
-		name,
 		bot_id,
 		table,
 		conditions,
@@ -29,7 +28,7 @@ export default function FraktureWarehouseTable(props){
 
 	return <React.Fragment>
 		{label && <Typography variant="h6">{label}</Typography>}
-		<ReportQuery variables={variables} width={width} height={height}>{({data}) => {
+		<ReportQuery name={name} variables={variables} width={width} height={height}>{({data}) => {
 			let rowsPerPage=Math.floor((height-80)/25);
 			if (rowsPerPage<3) rowsPerPage=3;
 			return <div style={{height:"100%",overflow:"auto",zoom:"1.0"}}>

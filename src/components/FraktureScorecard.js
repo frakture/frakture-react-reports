@@ -9,7 +9,6 @@ export default function FraktureScorecard(props){
 	include_previous=include_previous!==false;
 
 	const variables={
-		name,
 		bot_id:warehouse_bot_id,
 		table,
 		fields:[{alias:"value",fql:metric.fql}],
@@ -34,7 +33,7 @@ export default function FraktureScorecard(props){
 	case "lg": variants=['h4','h2']; break;
 	}
 
-	return <ReportQuery variables={variables} width={width} height={height}>{({data}) => {
+	return <ReportQuery name={name} variables={variables} width={width} height={height}>{({data}) => {
 		if (data.length>1){return "Invalid query, more than one result";}
 		let val=data[0].value;
 		return (

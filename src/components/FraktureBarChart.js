@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React,{useState} from 'react';
-import {useHistory,useLocation} from 'react-router-dom';
+import {HistoryContext} from './HistoryContext';
 import {
 	Area,
 	Bar,
@@ -17,15 +17,15 @@ import {formatValue,relativeDate} from '../formatters';
 
 export default function FraktureBarChart(props){
 	let {name,warehouse_bot_id,table,dimension,metrics,breakdown:_breakdown,conditions,order_by,
-		is_date,label="",get_color,width,height,params}=props;
+		is_date,label="",get_color,width,height,qs}=props;
 	if (!name) return "Name is required in props";
 	let breakdown=[].concat(_breakdown).filter(Boolean);
 	if (breakdown.length>1) throw new Error("Only one breakdown field allowed");
 	breakdown=breakdown[0];
 	let [refAreaLeft,setLeft]=useState();
 	let [refAreaRight,setRight]=useState();
-	const history = useHistory();
-	const location = useLocation();
+	const history=React.useContext(HistoryContext);
+	const location=history.location;
 
 	function xFormat(val){
 		//console.log("Formatting ",val);
@@ -36,12 +36,12 @@ export default function FraktureBarChart(props){
 	let xAlias=dimension.alias || "col0";
 	let xGroup=dimension;
 	let xaxis=<XAxis dataKey={xAlias} tickFormatter={xFormat} />;
+	let domain=null;
 	if (is_date){
 		let days=360; //default to about a year
-		let domain=null;
-		if (params.start && params.end){
-			let start=relativeDate(params.start).getTime();
-			let end=relativeDate(params.end).getTime();
+		if (qs.start && qs.end){
+			let start=relativeDate(qs.start).getTime();
+			let end=relativeDate(qs.end).getTime();
 			days=(end-start)/(24*60*60*1000);
 			if (start<0){
 				start="auto";
@@ -59,7 +59,7 @@ export default function FraktureBarChart(props){
 		}else{
 			xGroup={alias:xAlias,fql:"DAY("+dimension.fql+")"};
 		}
-		console.log('Start/end:',params.start,params.end,days,xGroup);
+		console.log('Start/end:',qs.start,qs.end,domain,days,xGroup);
 
 		xaxis=<XAxis
 			dataKey={xAlias}
@@ -111,15 +111,20 @@ export default function FraktureBarChart(props){
 		<ReportQuery key="detail" name={name} width={width} height={height} variables={variables}>{({data}) => {
 			//const width = 500;
 			if (data.length==0) return "No data available";
-			data.forEach(d=>{
-				if (!is_date) return;
+			data=data.map(d=>{
+				if (!is_date) return d;
 				if (String(d[xAlias]).length==4){
 					d[xAlias]=new Date(String(d[xAlias])+"-01-01").getTime(); // fix for year functions that don't return full date format
 				}else{
 					d[xAlias]=new Date(d[xAlias]).getTime();
 				}
-
-			});
+				if (domain && d[xAlias]<domain[0]){
+					console.log("Ignoring ",d[xAlias], new Date(d[xAlias])," as before ",domain[0],new Date(domain[0]));
+					return false;
+				}
+				if (domain && d[xAlias]>domain[1]) return false;
+				return d;
+			}).filter(Boolean);
 
 			if (breakdown){
 				let distinctBreakdown=Object.keys(data.reduce((a,d)=>{a[d[breakdown.alias]]=(a[d[breakdown.alias]]||0)+1; return a;},{}));
