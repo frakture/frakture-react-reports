@@ -1,6 +1,6 @@
 {
   "name": "frakture-react-reports",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Frakture React Reporting components -- library to include frakture reporting in your react report",
   "main": "lib/index.js",
   "module": "es/index.js",
