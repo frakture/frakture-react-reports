@@ -6,6 +6,7 @@ import Select from 'react-select';
 
 
 export default function FraktureQueryTextFilter (props){
+	if (!props.name) return "No name provided for Text Filter";
 	const history=React.useContext(HistoryContext);
 	const location=history.location;
 
@@ -21,7 +22,6 @@ export default function FraktureQueryTextFilter (props){
 		return true;
 	});
 	let variables={
-		name,
 		bot_id,
 		table,
 		fields:[{alias:"field",fql:field},{alias:"count",fql:"count(*)"}],
@@ -34,7 +34,7 @@ export default function FraktureQueryTextFilter (props){
 	let searchVal=(search['f.'+field]||"").split(",");
 
 	return <div style={{width:"300px"}}>
-		<ReportQuery variables={variables} width={300} height={50}>{({data}) => {
+		<ReportQuery name={name} variables={variables} width={300} height={50}>{({data}) => {
 			let options=data.map(d=>{
 				if (d.field=='') return {value:'_blank',label:"(Blank) ("+d.count+")"};
 				return {value:d.field,label:d.field+" ("+d.count+")"};

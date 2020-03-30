@@ -96,7 +96,7 @@ if (error) return <p>Oh no... {error.message}</p>;
 
 export function ReportQuery(props) {
 	const {name,children,variables:_variables,width,height}=props;
-	if (!name) return "ReportQuery requires a unique name";
+	if (!name) return "ReportQuery requires a name property";
 	const executeDataQuery=React.useContext(DataQueryContext);
 	if(typeof children != 'function') throw new Error('children must be function');
 	const variables=JSON.parse(JSON.stringify(buildQueryVariables(_variables)));

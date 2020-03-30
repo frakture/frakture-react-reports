@@ -4,7 +4,7 @@ import {report,data} from './demo';
 import {BrowserRouter as Router,useHistory} from "react-router-dom";
 import {ReportDisplay} from '../../src'
 
-function executeDataQuery({name,variables}){
+function ExecuteDataQuery({name,variables}){
 	console.log("executeDataQuery got ",Object.keys(variables));
 	console.log("Getting data for name",name," from ",Object.keys(data));
 	if (!name) return {error:"No name provided in "+Object.keys(props)};
@@ -14,7 +14,7 @@ function executeDataQuery({name,variables}){
 
 function History(props){
 	const history=useHistory();
-	return <ReportDisplay {...{executeDataQuery,report,history}}/>;
+	return <ReportDisplay {...{ExecuteDataQuery,report,history}}/>;
 }
 
 function Demo(props){

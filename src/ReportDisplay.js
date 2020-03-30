@@ -79,7 +79,7 @@ function ReportHeader(props){
 		{logo && <img src={logo} width="64" alt={label}/>}
 		{label && <Typography variant="h3" className="title">{label}</Typography>}
 		{filters && filters.length>0 && <div>
-			{filters.map((f,i)=><FraktureQueryTextFilter key={i} {...f}/>) }
+			{filters.map((f,i)=><FraktureQueryTextFilter key={i} name={"filter"+i} {...f}/>) }
 		</div>
 		}
 		<div>
@@ -281,10 +281,12 @@ export function ReportDisplayContext(props){
 export function ReportDisplay(props){
 	let {report,
 		executeDataQuery,
+		ExecuteDataQuery,
 		history
 		}=props;
 	if (!history) return "You must provide a history object";
-	if (!executeDataQuery) return "You must provide an executeDataQuery function";
+	executeDataQuery=executeDataQuery || ExecuteDataQuery;
+	if (!executeDataQuery) return "You must provide an ExecuteDataQuery hook";
 
 	return <HistoryProvider history={history}>
 		<DataQueryProvider executeDataQuery={executeDataQuery}>

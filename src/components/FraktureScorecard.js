@@ -40,7 +40,7 @@ export default function FraktureScorecard(props){
 			<div className="scorecard" style={{textAlign:"center"}}>
 				{label && <Typography fontWeight="fontWeightBold" variant={variants[0]}>{label}</Typography>}
 				<Typography variant={variants[1]}>{formatValue(val,metric.format)}</Typography>
-				{include_previous && <ReportQuery variables={previousVariables}>{({data:prevData}) => {
+				{include_previous && <ReportQuery name={name+"_prev"} variables={previousVariables}>{({data:prevData}) => {
 					if (!prevData[0].value || prevData[0].value==0) return "";
 
 					let diff=val-prevData[0].value;
