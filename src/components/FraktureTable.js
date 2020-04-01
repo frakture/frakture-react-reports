@@ -104,8 +104,8 @@ export default function FraktureTable({columns,rows,renderRow,onSelectedChange,o
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(parseInt(startingRowsPerPage));
 
-	//which columns to show, default the first 10
-	const [columnIndexes,setColumnIndexes] = useState([0,1,2,3,4,5,6,7,8,9]);
+	//which columns to show, default the first 15
+	const [columnIndexes,setColumnIndexes] = useState([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
 
 	const _columns=(columns || Object.keys(rows[0]||{"No Data":1}).map(k=>{return {title:k,field:k};})).map(c=>{
 		c.format=c.format|| (f=>f);
