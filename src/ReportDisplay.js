@@ -9,10 +9,10 @@ import './styles.css';
 import {Responsive,WidthProvider} from 'react-grid-layout';
 import GridLayout from 'react-grid-layout';
 import {getColorFunc} from './components/colors.js';
-import {QuickDateRange,QueryStringForm} from './components/QueryStringInputs';
+import {QuickDateRange} from './components/QueryStringInputs';
 import Typography from '@material-ui/core/Typography';
 import {DataQueryProvider} from './components/DataQueryContext';
-import {HistoryProvider} from './components/HistoryContext';
+import {HistoryProvider,HistoryContext} from './components/HistoryContext';
 
 import FrakturePieChart from './components/FrakturePieChart';
 import FraktureScorecard from './components/FraktureScorecard';
@@ -21,7 +21,7 @@ import FraktureReportTable from './components/FraktureReportTable';
 import FraktureWarehouseTable from './components/FraktureWarehouseTable';
 import FraktureTextFilter from './components/FraktureTextFilter';
 import FraktureQueryTextFilter from './components/FraktureQueryTextFilter';
-import {HistoryContext} from './components/HistoryContext';
+
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -52,9 +52,6 @@ class ReportError extends React.Component {
 }
 
 
-
-
-
 const componentMap={
 	FrakturePieChart,
 	FraktureScorecard,
@@ -65,18 +62,33 @@ const componentMap={
 };
 
 function ReportHeader(props){
-	let {report,editing_tools}=props;
+	let {report,logo="https://frakturecdn.s3.amazonaws.com/accounts/frakture/frakture-icon-lg.png",menu,editing_tools}=props;
 	let include_date=report.include_date || true;
 
 	if (report.include_date===false) include_date=false;
-	let {label,logo,agency_logo,data_sources_array}=report;
+	let {label,data_sources_array}=report;
 	let filters=[];
+
 	data_sources_array.forEach(ds=>{
 		filters=filters.concat((ds.filters || []).map(f=>Object.assign({},ds,{field:f})));
 	});
+	let menuWrapper=[];
+
+	if (logo){
+		if (typeof logo=='string'){
+			menuWrapper.push(<img src={logo} width="64" alt={label}/>);
+		}else{
+			menuWrapper.push(logo);
+		}
+	}
+	if (menu){
+		menuWrapper.push(menu);
+	}else{
+		console.log("No menu found in report");
+	}
 
 	return <div className="frakture-report-header">
-		{logo && <img src={logo} width="64" alt={label}/>}
+		{menuWrapper.length && <div>{menuWrapper.map((d,i)=><span key={i}>{d}</span>)}</div>}
 		{label && <Typography variant="h3" className="title">{label}</Typography>}
 		{filters && filters.length>0 && <div>
 			{filters.map((f,i)=><FraktureQueryTextFilter key={i} name={"filter"+i} {...f}/>) }
@@ -153,9 +165,8 @@ function ComponentWrapper(_props){
 	return <div {...props}><ReportError contents={err}>{element}</ReportError>{children}</div>;
 }
 
-function assignContext({report:reportConfig,history}){
+function assignContext({report:reportConfig}){
 	let report=JSON.parse(JSON.stringify(reportConfig));
-
 
 	const qs=queryString.parse(location.search);
 	qs.start=relativeDate(qs.start || "-3M").toISOString();
@@ -216,36 +227,39 @@ function assignContext({report:reportConfig,history}){
 }
 
 export function DemoGrid(){
-    // layout is an array of objects, see the demo for more complete usage
-    const layout = [
-      {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
-      {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
-      {i: 'c', x: 4, y: 0, w: 1, h: 2}
-    ];
-    return (
-      <GridLayout className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
-        <div key="a">a</div>
-        <div key="b">b</div>
-        <div key="c">c</div>
-      </GridLayout>
-    )
+	// layout is an array of objects, see the demo for more complete usage
+	const layout = [
+		{i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
+		{i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
+		{i: 'c', x: 4, y: 0, w: 1, h: 2}
+	];
+	return (
+		<GridLayout className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
+			<div key="a">a</div>
+			<div key="b">b</div>
+			<div key="c">c</div>
+		</GridLayout>
+	);
 }
 export function ReportDisplayContext(props){
 	let {report:_report,
 		editing=false,
 		editing_tools,
-		onLayoutChange}=props;
+		onLayoutChange,
+		logo,
+		menu}=props;
 
 	let report=assignContext({report:_report});
 
 	//Try just the lg
 	let layouts={lg:(report.layouts||{}).lg};
 
+
 	let arr=Object.keys(report.components||{}).map(name=>{
 		let config=report.components[name];
 
 		if (!config.component){
-			console.error("Could not find a component for key "+key+" with keys:",Object.keys(config));
+			console.error("Could not find a componen with keys:",Object.keys(config));
 			return null;
 		}
 		config.name=name;
@@ -260,30 +274,30 @@ export function ReportDisplayContext(props){
 	//let currentLayoutName="lg";
 
 	return <div className="frakture-report">
-				<ReportHeader report={report} editing_tools={editing_tools}/>
-				<ResponsiveGridLayout
-					isDraggable={editing}
-					isResizable={editing}
-					layouts={layouts}
-					layout={layouts.lg}
-					cols={{xl:12,lg:12,md:12,sm:1,xs:1}}
-					rowHeight={50}
-					onLayoutChange={onLayoutChange}
-				>{arr.map((a,i)=>{
-						a.get_color=get_color;
-						return <ComponentWrapper key={a.name} component={a} editing={editing?true:undefined}/>;
-					}).filter(Boolean)}
-				</ResponsiveGridLayout>
-			</div>
+		<ReportHeader menu={menu} logo={logo} report={report} editing_tools={editing_tools}/>
+		<ResponsiveGridLayout
+			isDraggable={editing}
+			isResizable={editing}
+			layouts={layouts}
+			layout={layouts.lg}
+			cols={{xl:12,lg:12,md:12,sm:1,xs:1}}
+			rowHeight={50}
+			onLayoutChange={onLayoutChange}
+		>{arr.map((a)=>{
+				a.get_color=get_color;
+				return <ComponentWrapper key={a.name} component={a} editing={editing?true:undefined}/>;
+			}).filter(Boolean)}
+		</ResponsiveGridLayout>
+	</div>;
 };
 
 
 export function ReportDisplay(props){
-	let {report,
+	let {
 		executeDataQuery,
 		ExecuteDataQuery,
 		history
-		}=props;
+	}=props;
 	if (!history) return "You must provide a history object";
 	executeDataQuery=executeDataQuery || ExecuteDataQuery;
 	if (!executeDataQuery) return "You must provide an ExecuteDataQuery hook";
