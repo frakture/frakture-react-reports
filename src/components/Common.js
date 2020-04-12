@@ -53,7 +53,7 @@ export function buildQueryVariables(rawQuery) {
 	const{table,fields={},group_by=[],conditions=[],order_by=group_by,limit=1000}=rawQuery; //limit to 1000
 	if (!table){
 		console.error("No table specified in query:",rawQuery);
-		throw new Error("Could not find table in :"+Object.keys(rawQuery));
+		throw new Error("Could not find a table in :"+Object.keys(rawQuery));
 	}
 
 	if(limit != null && parseInt(limit) != limit) throw new Error('limit must be int');
@@ -96,15 +96,23 @@ if (error) return <p>Oh no... {error.message}</p>;
 
 export function ReportQuery(props) {
 	const {name,children,variables:_variables,width,height}=props;
-	if (!name) return "ReportQuery requires a name property";
 	const executeDataQuery=React.useContext(DataQueryContext);
 	if(typeof children != 'function') throw new Error('children must be function');
-	const variables=JSON.parse(JSON.stringify(buildQueryVariables(_variables)));
+	if (!name) return "ReportQuery requires a name property";
+
+	let variables=null;
+	try{
+		variables=JSON.parse(JSON.stringify(buildQueryVariables(_variables)));
+	}catch(e){
+		debugger;
+		return "Error building variables";
+	}
+
 	if(!variables) throw new Error("No built variables for variables: " +JSON.stringify(variables));
 
 	const {data,error,loading}=executeDataQuery({name,variables});
 	if (error){
-		console.error(error);
+		console.error("Loading error:",error);
 		return "There was an error loading data";
 	}
 	if(loading){

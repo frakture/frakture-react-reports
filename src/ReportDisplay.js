@@ -88,7 +88,7 @@ function ReportHeader(props){
 	}
 
 	return <div className="frakture-report-header">
-		{menuWrapper.length && <div>{menuWrapper.map((d,i)=><span key={i}>{d}</span>)}</div>}
+		{menuWrapper.length && <div className="frakture-report-header-menu">{menuWrapper.map((d,i)=><span key={i}>{d}</span>)}</div>}
 		{label && <Typography variant="h3" className="title">{label}</Typography>}
 		{filters && filters.length>0 && <div>
 			{filters.map((f,i)=><FraktureQueryTextFilter key={i} name={"filter"+i} {...f}/>) }
@@ -249,7 +249,14 @@ export function ReportDisplayContext(props){
 		logo,
 		menu}=props;
 
-	let report=assignContext({report:_report});
+	let report=null;
+	try{
+		report=assignContext({report:_report});
+	}catch(e){
+		console.error("Invalid report:",_report);
+		return e.message || e.toString();
+	}
+
 
 	//Try just the lg
 	let layouts={lg:(report.layouts||{}).lg};
@@ -259,7 +266,7 @@ export function ReportDisplayContext(props){
 		let config=report.components[name];
 
 		if (!config.component){
-			console.error("Could not find a componen with keys:",Object.keys(config));
+			console.error("Could not find a component with keys:",Object.keys(config));
 			return null;
 		}
 		config.name=name;
