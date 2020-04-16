@@ -39,6 +39,7 @@ export default function FraktureBarChart(props){
 	let domain=null;
 	if (is_date){
 		let days=360; //default to about a year
+		domain=[relativeDate("-3M").getTime(),relativeDate("now").getTime()];
 		if (qs.start && qs.end){
 			let start=relativeDate(qs.start).getTime();
 			let end=relativeDate(qs.end).getTime();
@@ -160,7 +161,9 @@ export default function FraktureBarChart(props){
 				//alert(refAreaLeft+","+refAreaRight);
 			}
 
-			if (!is_date) console.log("Non date data:",data);
+			if (is_date){
+				data.sort((a,b)=>{return a[xAlias]<b[xAlias]?-1:1});
+			}
 
 			return (
 				<ResponsiveContainer>
