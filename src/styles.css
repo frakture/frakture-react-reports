@@ -6,3 +6,15 @@
 	display: flex;
 	justify-content: flex-start;
 }
+
+.frakture-report-custom-tooltip{
+	background:#FFF;
+	border:1px solid #EEE;
+	border-radius:5px;
+	padding:10px;
+}
+
+
+.react-resizable{
+	border:1px solid #BBB;
+}

@@ -145,7 +145,6 @@ function ComponentWrapper(_props){
 	}
 	component.width=parseInt(style.width);
 	component.height=parseInt(style.height);
-	if (editing) style.border="1px solid #AAA";
 
 	const [filterValues,setFilterValue]=useUrlParamFilters();
 	component.filterValues=filterValues;
