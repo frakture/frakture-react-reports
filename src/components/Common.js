@@ -104,7 +104,7 @@ export function ReportQuery(props) {
 	try{
 		variables=JSON.parse(JSON.stringify(buildQueryVariables(_variables)));
 	}catch(e){
-		debugger;
+		console.error(e);
 		return "Error building variables";
 	}
 

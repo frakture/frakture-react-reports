@@ -51,6 +51,12 @@ export default function FraktureBarChart(props){
 			}
 		}
 
+		//console.log('Start/end:',qs.start,qs.end,domain,days,xGroup);
+		let leftPad=0;
+		if (metrics && metrics[0] && metrics[0].type=="bar"){
+				leftPad=60;
+		}
+
 		if (days>1200){
 			xGroup={alias:xAlias,fql:"YEAR("+dimension.fql+")"};
 		}else if (days>365){
@@ -60,14 +66,14 @@ export default function FraktureBarChart(props){
 		}else{
 			xGroup={alias:xAlias,fql:"DAY("+dimension.fql+")"};
 		}
-		console.log('Start/end:',qs.start,qs.end,domain,days,xGroup);
+
 
 		xaxis=<XAxis
 			dataKey={xAlias}
 			domain={domain}
 			scale='time'
 			type='number'
-			padding={{ left: 10,right:10 }}
+			padding={{ left: leftPad,right:10 }}
 			tickFormatter={xFormat}
 		/>;
 	}
@@ -120,7 +126,7 @@ export default function FraktureBarChart(props){
 					d[xAlias]=new Date(d[xAlias]).getTime();
 				}
 				if (domain && d[xAlias]<domain[0]){
-					console.log("Ignoring ",d[xAlias], new Date(d[xAlias])," as before ",domain[0],new Date(domain[0]));
+					//console.log("Ignoring ",d[xAlias], new Date(d[xAlias])," as before ",domain[0],new Date(domain[0]));
 					return false;
 				}
 				if (domain && d[xAlias]>domain[1]) return false;

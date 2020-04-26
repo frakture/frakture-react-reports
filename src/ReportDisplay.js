@@ -17,6 +17,7 @@ import {HistoryProvider,HistoryContext} from './components/HistoryContext';
 import FrakturePieChart from './components/FrakturePieChart';
 import FraktureScorecard from './components/FraktureScorecard';
 import FraktureBarChart from './components/FraktureBarChart';
+import FraktureBubbleChart from './components/FraktureBubbleChart';
 import FraktureStackedBarChart from './components/FraktureStackedBarChart';
 import FraktureReportTable from './components/FraktureReportTable';
 import FraktureWarehouseTable from './components/FraktureWarehouseTable';
@@ -58,6 +59,7 @@ const componentMap={
 	FraktureScorecard,
 	FraktureReportTable,
 	FraktureBarChart,
+	FraktureBubbleChart,
 	FraktureStackedBarChart,
 	FraktureWarehouseTable,
 	FraktureTextFilter
