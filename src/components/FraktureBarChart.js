@@ -39,7 +39,9 @@ export default function FraktureBarChart(props){
 	let domain=null;
 	if (is_date){
 		let days=360; //default to about a year
-		domain=[relativeDate("-3M").getTime(),relativeDate("now").getTime()];
+		//Don't predefine the domain -- the data should do that even without filters
+		//domain=[relativeDate("-3M").getTime(),relativeDate("now").getTime()];
+		domain=null;
 		if (qs.start && qs.end){
 			let start=relativeDate(qs.start).getTime();
 			let end=relativeDate(qs.end).getTime();
@@ -51,7 +53,7 @@ export default function FraktureBarChart(props){
 			}
 		}
 
-		//console.log('Start/end:',qs.start,qs.end,domain,days,xGroup);
+		console.log('Start/end:',qs.start,qs.end,domain,days,xGroup);
 		let leftPad=0;
 		if (metrics && metrics[0] && metrics[0].type=="bar"){
 				leftPad=60;
