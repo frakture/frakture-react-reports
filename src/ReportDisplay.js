@@ -282,6 +282,7 @@ export function ReportDisplayContext(props){
 
 	let get_color=getColorFunc("dcMetroColors");
 	//let currentLayoutName="lg";
+	console.log("Rendering Frakture reporting with editing=",editing);
 
 	return <div className="frakture-report">
 		<ReportHeader menu={menu} logo={logo} report={report} editing_tools={editing_tools}/>
