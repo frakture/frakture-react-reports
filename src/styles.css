@@ -13,6 +13,30 @@
 	border-radius:5px;
 	padding:10px;
 }
+.resize1.5{
+	font-size: 15px;
+  font-size: 1.5vw;
+}
+.resize2{
+	font-size: 20px;
+  font-size: 2.0vw;
+}
+.resize2.5{
+	font-size: 25px;
+  font-size: 2.5vw;
+}
+.resize3{
+	font-size: 30px;
+  font-size: 3.5vw;
+}
+.resize3.5{
+	font-size: 35px;
+  font-size: 4vw;
+}
+.resize4{
+	font-size: 40px;
+  font-size: 4vw;
+}
 
 
 .react-resizable{
