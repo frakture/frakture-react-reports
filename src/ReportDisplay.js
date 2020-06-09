@@ -284,7 +284,7 @@ export function ReportDisplayContext(props){
 	//let currentLayoutName="lg";
 	console.log("Rendering Frakture reporting with editing=",editing);
 
-	return <div className="frakture-report">
+	return <div className={`frakture-report${editing?"frakture-report-editing":""}`>
 		<ReportHeader menu={menu} logo={logo} report={report} editing_tools={editing_tools}/>
 		<ResponsiveGridLayout
 			isDraggable={editing}
