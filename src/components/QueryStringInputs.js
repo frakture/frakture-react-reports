@@ -152,6 +152,7 @@ function QuickDateRange(props){
 						<option value={"-100y~"}>All time</option>
 					</optgroup>
 					<optgroup label="Historical">
+						<option value={"-1M.start.month~-1M.end.month"}>Last Month</option>
 						<option value={"-1y.start.y~-1y.end.y"}>Last Year</option>
 						<option value={"-1y.start.y~-0y.end.y"}>This Year</option>
 						<option value={"~-1h"}>1+ Hour Ago</option>
