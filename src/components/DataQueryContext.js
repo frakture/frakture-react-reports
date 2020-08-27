@@ -2,8 +2,9 @@ import React from 'react';
 const DataQueryContext = React.createContext();
 
 function DataQueryProvider(props) {
+	let exec=props.useDataQuery || props.executeDataQuery;
 	return (
-		<DataQueryContext.Provider value={props.executeDataQuery}>
+		<DataQueryContext.Provider value={exec}>
 			{props.children}
 		</DataQueryContext.Provider>
 	);

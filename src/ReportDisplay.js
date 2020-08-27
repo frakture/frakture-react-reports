@@ -305,10 +305,11 @@ export function ReportDisplayContext(props){
 
 export function ReportDisplay(props){
 	let {
-		executeDataQuery,
 		ExecuteDataQuery,
 		history
 	}=props;
+	let executeDataQuery = props.useDataQuery || props.executeDataQuery;
+	
 	if (!history) return "You must provide a history object";
 	executeDataQuery=executeDataQuery || ExecuteDataQuery;
 	if (!executeDataQuery) return "You must provide an ExecuteDataQuery hook";
